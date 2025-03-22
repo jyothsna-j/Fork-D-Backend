@@ -6,12 +6,18 @@ public class Restaurant {
 	private int restaurantId;
 	private String restaurantName;
 	private String cuisine;
+	private Image logo;
+	private Image background;
 	
-	public Restaurant(int restaurantId, String restaurantName, String cuisine) {
+	public Restaurant(int restaurantId, String restaurantName, String cuisine, Image logo) {
 		super();
 		this.restaurantId = restaurantId;
 		this.restaurantName = restaurantName;
 		this.cuisine = cuisine;
+		this.logo = logo;
+	}
+
+	public Restaurant() {
 	}
 
 	public int getRestaurantId() {
@@ -36,6 +42,22 @@ public class Restaurant {
 
 	public void setCuisine(String cuisine) {
 		this.cuisine = cuisine;
+	}
+
+	public Image getLogo() {
+		return logo;
+	}
+
+	public void setLogo(Image logo) {
+		this.logo = logo;
+	}
+
+	public Image getBackground() {
+		return background;
+	}
+
+	public void setBackground(Image background) {
+		this.background = background;
 	}
 
 	@Override

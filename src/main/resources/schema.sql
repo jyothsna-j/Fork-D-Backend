@@ -1,7 +1,8 @@
 CREATE TABLE restaurants (
     id IDENTITY PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    cuisine VARCHAR(255) NOT NULL
+    cuisine VARCHAR(255) NOT NULL,
+    image_type BLOB
 );
 
 CREATE TABLE dishes (

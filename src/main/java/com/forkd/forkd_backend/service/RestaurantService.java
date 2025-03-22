@@ -29,16 +29,29 @@ public class RestaurantService {
 	}
 
 	public void saveImage(MultipartFile file) {
+		
+	}
+
+	public Image getImage(int id) {
+		Restaurant value = restaurantRepository.findById(id);
+		return value.getLogo();
+	}
+
+	public void updateRestaurant(Restaurant restaurant, MultipartFile file) {
 		try {
+			Restaurant newRestaurant = new Restaurant();
 			image = new Image(file.getBytes());
-			System.out.println(image);
+			image.setImageName(file.getOriginalFilename());
+			image.setImageType(file.getContentType());
+			
+			newRestaurant.setRestaurantId(restaurant.getRestaurantId());
+			newRestaurant.setLogo(image);
+			
+			restaurantRepository.updateRestaurant(newRestaurant);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-	}
-
-	public Image getImage() {
-		return image;
 	}
 }
