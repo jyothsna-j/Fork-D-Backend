@@ -15,7 +15,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")  // Allow all endpoints
-                        .allowedOrigins("https://forkd1.netlify.app") // Allow frontend
+                        .allowedOrigins("https://fork-d.netlify.app") // Allow frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
