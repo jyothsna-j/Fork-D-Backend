@@ -39,7 +39,7 @@ public class SecurityConfig {
 	    public CorsConfigurationSource corsConfigurationSource() {
 	        CorsConfiguration config = new CorsConfiguration();
 	        config.setAllowCredentials(true);
-	        config.setAllowedOrigins(List.of("http://localhost:4200")); // Allow frontend
+	        config.setAllowedOrigins(List.of("https://forkd1.netlify.app")); // Allow frontend
 	        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 	        config.setAllowedHeaders(List.of("*"));
 
