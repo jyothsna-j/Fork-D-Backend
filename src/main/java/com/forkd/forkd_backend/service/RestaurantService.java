@@ -14,7 +14,6 @@ import com.forkd.forkd_backend.repository.RestaurantRepository;
 public class RestaurantService {
 
 	private final RestaurantRepository restaurantRepository;
-	private Image image = new Image();
 	
 	public RestaurantService(RestaurantRepository restaurantRepository) {
 		this.restaurantRepository = restaurantRepository;
@@ -40,7 +39,7 @@ public class RestaurantService {
 	public void updateRestaurant(Restaurant restaurant, MultipartFile file) {
 		try {
 			Restaurant newRestaurant = new Restaurant();
-			image = new Image(file.getBytes());
+			Image image = new Image(file.getBytes());
 			image.setImageName(file.getOriginalFilename());
 			image.setImageType(file.getContentType());
 			

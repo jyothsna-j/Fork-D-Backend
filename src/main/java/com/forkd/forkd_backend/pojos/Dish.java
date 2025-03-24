@@ -15,6 +15,10 @@ public class Dish {
 		this.price = price;
 	}
 
+	public Dish() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getDishId() {
 		return dishId;
 	}

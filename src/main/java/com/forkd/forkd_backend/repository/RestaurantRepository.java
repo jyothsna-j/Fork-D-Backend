@@ -18,7 +18,7 @@ public class RestaurantRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 	
-	private final RowMapper<Restaurant> rowMapper = (rs, rowNum) -> new Restaurant(rs.getInt("id"), rs.getString("name"), rs.getString("cuisine"), new Image(rs.getBytes("image_type")));
+	private final RowMapper<Restaurant> rowMapper = (rs, rowNum) -> new Restaurant(rs.getInt("id"), rs.getString("name"), rs.getString("cuisine"), new Image(rs.getBytes("image_data")));
 	
 	public List<Restaurant> findAll() {
         return jdbcTemplate.query("SELECT * FROM restaurants", rowMapper);
@@ -29,7 +29,9 @@ public class RestaurantRepository {
 	}
 	 
 	public int updateRestaurant(Restaurant restaurant) {
-        String sql = "UPDATE restaurants SET image_type = ? WHERE id = ?";
+        String sql = "UPDATE restaurants SET image_data = ? WHERE id = ?";
+        
+        System.out.print(restaurant.getLogo().getData());
         
         return jdbcTemplate.update(sql, restaurant.getLogo().getData(), restaurant.getRestaurantId());
     }
