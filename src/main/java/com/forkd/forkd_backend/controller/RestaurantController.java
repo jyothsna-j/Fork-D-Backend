@@ -40,7 +40,6 @@ public class RestaurantController {
 	
 	@PutMapping("")
 	public String updateRestaurant(@RequestPart Restaurant restaurant, @RequestParam("logo") MultipartFile file) {
-		System.out.println("hereee");
 		restaurantService.updateRestaurant(restaurant, file);
 		return "updated";
 	}
@@ -49,10 +48,8 @@ public class RestaurantController {
     public String uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             this.restaurantService.saveImage(file);
-            System.out.println("here1");
             return "File uploaded successfully";
         } catch (Exception e) {
-            System.out.println("Not here I hope");
             return "Upload failed";
         }
     }

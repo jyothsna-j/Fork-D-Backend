@@ -31,8 +31,6 @@ public class RestaurantRepository {
 	public int updateRestaurant(Restaurant restaurant) {
         String sql = "UPDATE restaurants SET image_data = ? WHERE id = ?";
         
-        System.out.print(restaurant.getLogo().getData());
-        
         return jdbcTemplate.update(sql, restaurant.getLogo().getData(), restaurant.getRestaurantId());
     }
 	
