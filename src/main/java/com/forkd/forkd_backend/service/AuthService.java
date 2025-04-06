@@ -1,8 +1,6 @@
 package com.forkd.forkd_backend.service;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
