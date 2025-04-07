@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -62,8 +61,8 @@ public class DishController {
 	}
 	
 	@PutMapping("")
-	public ResponseEntity<String> updateDish(@RequestBody Dish dish){
-		String message = dishService.updateDish(dish);
+	public ResponseEntity<String> updateDish(@RequestPart Dish dish, @RequestPart(value = "pic", required = false)  MultipartFile file){
+		String message = dishService.updateDish(dish, file);
 		if("SUCCESS".equals(message)) {
 			return ResponseEntity.status(HttpStatus.OK).body(message);
 		}

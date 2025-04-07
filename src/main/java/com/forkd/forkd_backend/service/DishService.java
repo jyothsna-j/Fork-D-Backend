@@ -39,8 +39,21 @@ public class DishService {
 		}
 	}
 	
-	public String updateDish(Dish dish) {
-		return dishRepository.updateDish(dish)==0 ? "FAILURE" : "SUCCESS";
+	public String updateDish(Dish dish, MultipartFile file) {
+		try {
+			if(file!=null) {
+				Image image = new Image(file.getContentType(), file.getOriginalFilename(), file.getBytes());
+				dish.setDishImage(image);
+			}
+			return dishRepository.updateDish(dish)==0 ? "FAILURE" : "SUCCESS";
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			return "FAILURE";
+			
+		}
+		
 	}
 	
 	public String deleteDish(int dishId) {
