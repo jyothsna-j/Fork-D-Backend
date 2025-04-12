@@ -45,40 +45,40 @@ public class DishController {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<String> addDish(@RequestPart Dish dish, @RequestParam("pic") MultipartFile file){
+	public ResponseEntity<ApiResponse<String>> addDish(@RequestPart Dish dish, @RequestParam("pic") MultipartFile file){
 		String message = dishService.addDish(dish, file);
 		
 		if(message.startsWith("Dish inserted successfully")) {
-			return ResponseEntity.status(HttpStatus.CREATED).body(message);
+			return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(message, null));
 		}
 		else if("An unexpected error occurred.".equals(message)) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse<>(message, null));
 		}
 		else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(message, null));
 		}
 		
 	}
 	
 	@PutMapping("")
-	public ResponseEntity<String> updateDish(@RequestPart Dish dish, @RequestPart(value = "pic", required = false)  MultipartFile file){
+	public ResponseEntity<ApiResponse<String>> updateDish(@RequestPart Dish dish, @RequestPart(value = "pic", required = false)  MultipartFile file){
 		String message = dishService.updateDish(dish, file);
 		if("SUCCESS".equals(message)) {
-			return ResponseEntity.status(HttpStatus.OK).body(message);
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(message, null));
 		}
 		else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(message, null));
 		}
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteDish(@PathVariable int id){
+	public ResponseEntity<ApiResponse<String>> deleteDish(@PathVariable int id){
 		String message = dishService.deleteDish(id);
 		if("SUCCESS".equals(message)) {
-			return ResponseEntity.status(HttpStatus.OK).body(message);
+			return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(message, null));
 		}
 		else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(message, null));
 		}
 	}
 	

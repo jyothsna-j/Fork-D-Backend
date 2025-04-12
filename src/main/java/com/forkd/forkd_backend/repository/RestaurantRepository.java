@@ -13,25 +13,36 @@ import com.forkd.forkd_backend.pojos.Restaurant;
 public class RestaurantRepository {
 
 	private final JdbcTemplate jdbcTemplate;
-	
+
 	public RestaurantRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-	
-	private final RowMapper<Restaurant> rowMapper = (rs, rowNum) -> new Restaurant(rs.getInt("id"), rs.getString("name"), rs.getString("cuisine"), new Image(rs.getBytes("image_data")));
-	
+
+	private final RowMapper<Restaurant> rowMapper = (rs, rowNum) -> new Restaurant(rs.getInt("id"),
+			rs.getString("name"), rs.getString("cuisine"),
+			new Image(rs.getString("image_type"), rs.getString("image_name"), rs.getBytes("image_data")),
+			rs.getInt("user_id"));
+
 	public List<Restaurant> findAll() {
-        return jdbcTemplate.query("SELECT * FROM restaurants", rowMapper);
-    }
-	
+		return jdbcTemplate.query("SELECT * FROM restaurants", rowMapper);
+	}
+
 	public Restaurant findById(int id) {
 		return jdbcTemplate.queryForObject("SELECT * FROM restaurants WHERE id = ?", rowMapper, id);
 	}
-	 
-	public int updateRestaurant(Restaurant restaurant) {
-        String sql = "UPDATE restaurants SET image_data = ? WHERE id = ?";
-        
-        return jdbcTemplate.update(sql, restaurant.getLogo().getData(), restaurant.getRestaurantId());
-    }
 	
+	public Restaurant findByUserId(int id) {
+		return jdbcTemplate.queryForObject("SELECT * FROM restaurants WHERE user_id = ?", rowMapper, id);
+	}
+
+	public int updateRestaurantImage(Restaurant restaurant) {
+		String sql = "UPDATE restaurants SET image_data = ?, image_name = ?, image_type = ? WHERE id = ?";
+		return jdbcTemplate.update(sql, restaurant.getLogo().getData(), restaurant.getLogo().getImageName(), restaurant.getLogo().getImageType(), restaurant.getRestaurantId());
+	}
+	
+	public int updateRestaurantCuisine(Restaurant restaurant) {
+		String sql = "UPDATE restaurants SET cuisine = ? WHERE id = ?";
+		return jdbcTemplate.update(sql, restaurant.getCuisine(), restaurant.getRestaurantId());
+	}
+
 }

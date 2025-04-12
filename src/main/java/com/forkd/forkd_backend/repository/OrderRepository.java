@@ -28,7 +28,7 @@ public class OrderRepository {
 	    String sql = """
 	        SELECT 
 	            o.order_id, o.amount, o.order_status, o.order_date, o.order_ref_no, 
-	            u.user_id, u.username, u.email, u.name,
+	            u.user_id, u.username, u.email, u.name, u.contact_number,
 	            r.id, r.name as restaurant_name
 	        FROM orders o
 	        JOIN users u ON o.user_id = u.user_id
@@ -50,6 +50,7 @@ public class OrderRepository {
 	        user.setUsername(rs.getString("username"));
 	        user.setEmail(rs.getString("email"));
 	        user.setName(rs.getString("name"));
+	        user.setContactNumber(rs.getLong("contact_number"));
 	        order.setUser(user);
 
 	        // 🟡 Populate Restaurant
@@ -69,7 +70,7 @@ public class OrderRepository {
 	    String sql = """
 	        SELECT 
 	            o.order_id, o.amount, o.order_status, o.order_date, o.order_ref_no, 
-	            u.user_id, u.username, u.email, u.name,
+	            u.user_id, u.username, u.email, u.name, u.contact_number,
 	            r.id, r.name as restaurant_name
 	        FROM orders o
 	        JOIN users u ON o.user_id = u.user_id
@@ -91,6 +92,7 @@ public class OrderRepository {
 	        user.setUsername(rs.getString("username"));
 	        user.setEmail(rs.getString("email"));
 	        user.setName(rs.getString("name"));
+	        user.setContactNumber(rs.getLong("contact_number"));
 	        order.setUser(user);
 
 	        // 🟡 Populate Restaurant

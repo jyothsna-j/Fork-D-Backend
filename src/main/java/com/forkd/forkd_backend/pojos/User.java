@@ -4,39 +4,29 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
-	
+
 	private Long userId;
 	private String username;
 	private String email;
 	private String name;
 	private String password;
 	private String role;
-	
-	 @JsonCreator
-	    public User(
-	        @JsonProperty("name") String name,
-	        @JsonProperty("username") String username,
-	        @JsonProperty("email") String email,
-	        @JsonProperty("password") String password,
-	        @JsonProperty("role") String role
-	    ) {
-	        this.name = name;
-	        this.username = username;
-	        this.email = email;
-	        this.password = password;
-	        this.role = role;
-	    }
-	 
-	public User(String username, String email, String name, String password, String role, int val) {
-		super();
+	private Long contactNumber;
+
+	@JsonCreator
+	public User(@JsonProperty("name") String name, @JsonProperty("username") String username,
+			@JsonProperty("email") String email, @JsonProperty("password") String password,
+			@JsonProperty("role") String role, @JsonProperty("contactNumber") Long contactNumber) {
+		this.name = name;
 		this.username = username;
 		this.email = email;
-		this.name = name;
 		this.password = password;
 		this.role = role;
+		this.contactNumber = contactNumber;
 	}
 
-	public User(Long userId, String username, String email, String name, String password, String role) {
+	public User(Long userId, String username, String email, String name, String password, String role,
+			Long contactNumber) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -44,9 +34,8 @@ public class User {
 		this.name = name;
 		this.password = password;
 		this.role = role;
+		this.contactNumber = contactNumber;
 	}
-
-
 
 	public User() {
 		// TODO Auto-generated constructor stub
@@ -99,7 +88,12 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	
-	
+
+	public Long getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(Long contactNumber) {
+		this.contactNumber = contactNumber;
+	}
 }

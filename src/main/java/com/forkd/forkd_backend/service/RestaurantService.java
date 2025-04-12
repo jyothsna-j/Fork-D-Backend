@@ -26,31 +26,45 @@ public class RestaurantService {
 	public Restaurant getRestaurantById(int id) {
 		return restaurantRepository.findById(id);
 	}
-
-	public void saveImage(MultipartFile file) {
-		
+	
+	public Restaurant getRestaurantByUserId(int id) {
+		return restaurantRepository.findByUserId(id);
 	}
 
-	public Image getImage(int id) {
-		Restaurant value = restaurantRepository.findById(id);
-		return value.getLogo();
-	}
-
-	public void updateRestaurant(Restaurant restaurant, MultipartFile file) {
+	public String updateRestaurantImage(int restaurantId, MultipartFile file) {
 		try {
 			Restaurant newRestaurant = new Restaurant();
 			Image image = new Image(file.getBytes());
 			image.setImageName(file.getOriginalFilename());
 			image.setImageType(file.getContentType());
 			
-			newRestaurant.setRestaurantId(restaurant.getRestaurantId());
+			newRestaurant.setRestaurantId(restaurantId);
 			newRestaurant.setLogo(image);
 			
-			restaurantRepository.updateRestaurant(newRestaurant);
+			int rows = restaurantRepository.updateRestaurantImage(newRestaurant);
+			if (rows > 0) {
+	            return "Image updated successfully";
+	        } else {
+	            return "Restaurant not found or image not updated";
+	        }
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+			return "Failed to process image";
+		}	
+	}
+	
+	public String updateRestaurantCuisine(int restaurantId, Restaurant restaurant) {
+		int rows = restaurantRepository.updateRestaurantCuisine(restaurant);
+		if (rows > 0) {
+		    return "Cuisine updated successfully";
+		} else {
+		    return "Restaurant not found or cuisine not updated";
+		}	
+	}
+	
+	public Image getImage(int id) {
+		Restaurant value = restaurantRepository.findById(id);
+		return value.getLogo();
 	}
 }

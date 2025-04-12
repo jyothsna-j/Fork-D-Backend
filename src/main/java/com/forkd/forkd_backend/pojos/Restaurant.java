@@ -7,14 +7,16 @@ public class Restaurant {
 	private String restaurantName;
 	private String cuisine;
 	private Image logo;
-	private Image background;
+	private int userId;
 	
-	public Restaurant(int restaurantId, String restaurantName, String cuisine, Image logo) {
+	
+	public Restaurant(int restaurantId, String restaurantName, String cuisine, Image logo, int userId) {
 		super();
 		this.restaurantId = restaurantId;
 		this.restaurantName = restaurantName;
 		this.cuisine = cuisine;
 		this.logo = logo;
+		this.userId = userId;
 	}
 
 	public Restaurant() {
@@ -52,17 +54,17 @@ public class Restaurant {
 		this.logo = logo;
 	}
 
-	public Image getBackground() {
-		return background;
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setBackground(Image background) {
-		this.background = background;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cuisine, restaurantId, restaurantName);
+		return Objects.hash(cuisine, logo, restaurantId, restaurantName, userId);
 	}
 
 	@Override
@@ -74,14 +76,15 @@ public class Restaurant {
 		if (getClass() != obj.getClass())
 			return false;
 		Restaurant other = (Restaurant) obj;
-		return Objects.equals(cuisine, other.cuisine) && restaurantId == other.restaurantId
-				&& Objects.equals(restaurantName, other.restaurantName);
+		return Objects.equals(cuisine, other.cuisine) && Objects.equals(logo, other.logo)
+				&& restaurantId == other.restaurantId && Objects.equals(restaurantName, other.restaurantName)
+				&& userId == other.userId;
 	}
 
 	@Override
 	public String toString() {
 		return "Restaurant [restaurantId=" + restaurantId + ", restaurantName=" + restaurantName + ", cuisine="
-				+ cuisine + "]";
+				+ cuisine + ", logo=" + logo + ", userId=" + userId + "]";
 	}
 
 	

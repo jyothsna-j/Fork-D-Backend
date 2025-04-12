@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.forkd.forkd_backend.pojos.User;
 import com.forkd.forkd_backend.repository.UserRepository;
+import com.forkd.forkd_backend.utils.ApiResponse;
 import com.forkd.forkd_backend.utils.JwtUtil;
 
 @Service
@@ -30,20 +31,26 @@ public class AuthService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    public String authenticate(String username, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        User user = userRepository.getUserByUsername(username);
-        return jwtUtil.generateToken(user.getUserId().toString(), username, user.getRole());
+    public ApiResponse<String> authenticate(String username, String password) {
+    	try {
+    		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            User user = userRepository.getUserByUsername(username);
+            String token = jwtUtil.generateToken(user.getUserId().toString(), username, user.getRole());
+            return new ApiResponse<>("Login successful", token);
+    	}
+        catch (Exception e){
+        	return new ApiResponse<>("Username or password invalid!", null);
+        }
     }
 
-    public String signup(User newUser) {
+    public ApiResponse<String> signup(User newUser) {
         if (userRepository.doesUsernameExist(newUser.getUsername())) {
-            throw new RuntimeException("User already exists");
+        	return new ApiResponse<>("Username already exists", null);
         }
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         int userId = userRepository.createUser(newUser);
-        System.out.println(userId);
-        return jwtUtil.generateToken(Integer.toString(userId), newUser.getUsername(), newUser.getRole());
+        String token = jwtUtil.generateToken(Integer.toString(userId), newUser.getUsername(), newUser.getRole());
+        return new ApiResponse<>("Signup successful", token);
     }
 
     @Override
