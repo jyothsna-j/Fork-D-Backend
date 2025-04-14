@@ -25,6 +25,10 @@ public class OrderService {
 		return orderRepository.getOrdersByRestaurantId(restaurantId);
 	}
 	
+	public List<Order> getOrdersToApprove(){
+		return orderRepository.getPaymentApprovalPendingOrders();
+	}
+	
 	public void createOrder(Order order) {
 		order.setOrderReferenceNumber(UUID.randomUUID());
 		orderRepository.insertOrder(order);

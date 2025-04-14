@@ -2,6 +2,7 @@ package com.forkd.forkd_backend.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class OrderRepository {
 	        order.setOrderId(rs.getInt("order_id"));
 	        order.setAmount(rs.getFloat("amount"));
 	        order.setOrderStatus(rs.getString("order_status"));
-	        order.setOrderDate(rs.getDate("order_date"));
+	        order.setOrderDate(rs.getTimestamp("order_date").toLocalDateTime());
 	        order.setOrderReferenceNumber(UUID.fromString(rs.getString("order_ref_no")));
 
 	        // 🟢 Populate User
@@ -83,7 +84,7 @@ public class OrderRepository {
 	        order.setOrderId(rs.getInt("order_id"));
 	        order.setAmount(rs.getFloat("amount"));
 	        order.setOrderStatus(rs.getString("order_status"));
-	        order.setOrderDate(rs.getDate("order_date"));
+	        order.setOrderDate(rs.getTimestamp("order_date").toLocalDateTime());
 	        order.setOrderReferenceNumber(UUID.fromString(rs.getString("order_ref_no")));
 
 	        // 🟢 Populate User
@@ -106,6 +107,48 @@ public class OrderRepository {
 
 	        return order;
 	    }, restaurantId);
+	}
+	
+	public List<Order> getPaymentApprovalPendingOrders() {
+	    String sql = """
+	        SELECT 
+	            o.order_id, o.amount, o.order_status, o.order_date, o.order_ref_no, 
+	            u.user_id, u.username, u.email, u.name, u.contact_number,
+	            r.id, r.name as restaurant_name
+	        FROM orders o
+	        JOIN users u ON o.user_id = u.user_id
+	        JOIN restaurants r ON o.restaurant_id = r.id
+	        WHERE o.order_status = 'PAYMENT_APPROVAL_PENDING'
+	    """;
+
+	    return jdbcTemplate.query(sql, (rs, rowNum) -> {
+	        Order order = new Order();
+	        order.setOrderId(rs.getInt("order_id"));
+	        order.setAmount(rs.getFloat("amount"));
+	        order.setOrderStatus(rs.getString("order_status"));
+	        order.setOrderDate(rs.getTimestamp("order_date").toLocalDateTime());
+	        order.setOrderReferenceNumber(UUID.fromString(rs.getString("order_ref_no")));
+
+	        // 🟢 Populate User
+	        User user = new User();
+	        user.setUserId(rs.getLong("user_id"));
+	        user.setUsername(rs.getString("username"));
+	        user.setEmail(rs.getString("email"));
+	        user.setName(rs.getString("name"));
+	        user.setContactNumber(rs.getLong("contact_number"));
+	        order.setUser(user);
+
+	        // 🟡 Populate Restaurant
+	        Restaurant restaurant = new Restaurant();
+	        restaurant.setRestaurantId(rs.getInt("id"));
+	        restaurant.setRestaurantName(rs.getString("restaurant_name"));
+	        order.setRestaurant(restaurant);
+	        
+	        List<OrderedItems> items = getOrderedItemsByOrderRefNo(order.getOrderReferenceNumber());
+	        order.setItems(items);
+
+	        return order;
+	    });
 	}
 	
 	private List<OrderedItems> getOrderedItemsByOrderRefNo(UUID orderRefNo) {
@@ -140,7 +183,7 @@ public class OrderRepository {
             order.getRestaurant().getRestaurantId(),
             order.getAmount(),
             order.getOrderStatus(),
-            new java.sql.Timestamp(order.getOrderDate().getTime()),  // Convert Date to SQL Timestamp
+            Timestamp.valueOf(order.getOrderDate()),  // Convert Date to SQL Timestamp
             order.getOrderReferenceNumber());
         
         insertOrderItems(order.getItems(), order.getOrderReferenceNumber());

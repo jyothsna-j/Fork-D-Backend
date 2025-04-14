@@ -1,6 +1,6 @@
 package com.forkd.forkd_backend.pojos;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ public class Order {
 	private Restaurant restaurant;
 	private float amount;
 	private String orderStatus;
-	private Date orderDate;
+	private LocalDateTime orderDate;
 	private List<OrderedItems> items;
 	private UUID orderReferenceNumber;
 	
@@ -26,7 +26,7 @@ public class Order {
 			 @JsonProperty("restaurant")Restaurant restaurant, 
 			 @JsonProperty("amount")float amount, 
 			 @JsonProperty("orderStatus")String orderStatus, 
-			 @JsonProperty("orderDate")Date orderDate,
+			 @JsonProperty("orderDate")LocalDateTime orderDate,
 			 @JsonProperty("items")List<OrderedItems> items) {
 		super();
 		this.user = user;
@@ -37,7 +37,7 @@ public class Order {
 		this.items = items;
 	}
 
-	public Order(int orderId, User user, Restaurant restaurant, float amount, String orderStatus, Date orderDate,
+	public Order(int orderId, User user, Restaurant restaurant, float amount, String orderStatus, LocalDateTime orderDate,
 			List<OrderedItems> items, UUID orderReferenceNumber) {
 		super();
 		this.orderId = orderId;
@@ -94,11 +94,11 @@ public class Order {
 		this.orderStatus = orderStatus;
 	}
 
-	public Date getOrderDate() {
+	public LocalDateTime getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(LocalDateTime orderDate) {
 		this.orderDate = orderDate;
 	}
 
@@ -118,4 +118,14 @@ public class Order {
 		this.orderReferenceNumber = orderReferenceNumber;
 	}
 	
+}
+
+enum Status {
+	  PAYMENT_APPROVAL_PENDING,
+	  PAYMENT_APPROVED,
+	  INVALID_PAYMENT,
+	  PREPARING,
+	  PREPARED,
+	  IN_TRANSIT,
+	  DELIVERED
 }

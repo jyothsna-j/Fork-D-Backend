@@ -33,6 +33,11 @@ public class OrderController {
 		return orderService.getOrdersByRestaurantId(restaurantId);
 	}
 	
+	@GetMapping("/approve-payment")
+	public List<Order> getOrdersForApproval(){
+		return orderService.getOrdersToApprove(); 
+	}
+	
 	@PostMapping
 	public String createOrder(@RequestBody Order order) {
 		orderService.createOrder(order);
