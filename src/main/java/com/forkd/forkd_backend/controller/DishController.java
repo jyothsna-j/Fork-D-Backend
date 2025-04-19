@@ -45,7 +45,7 @@ public class DishController {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<ApiResponse<String>> addDish(@RequestPart Dish dish, @RequestParam("pic") MultipartFile file){
+	public ResponseEntity<ApiResponse<String>> addDish(@RequestPart Dish dish, @RequestParam(value = "pic", required = false) MultipartFile file){
 		String message = dishService.addDish(dish, file);
 		
 		if(message.startsWith("Dish inserted successfully")) {

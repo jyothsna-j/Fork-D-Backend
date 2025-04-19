@@ -86,19 +86,19 @@ public class CreateTaskRequest {
     // --- Nested classes ---
 
     public static class OrderDetails {
-        private int order_total;
+        private float order_total;
         private String paid;
         private String vendor_order_id;
         private String order_source;
         private String customer_orderId;
 
         // Getters and Setters
-        public int getOrder_total() {
+        public float getOrder_total() {
             return order_total;
         }
 
-        public void setOrder_total(int order_total) {
-            this.order_total = order_total;
+        public void setOrder_total(float f) {
+            this.order_total = f;
         }
 
         public String getPaid() {
@@ -256,7 +256,7 @@ public class CreateTaskRequest {
         private String id;
         private String name;
         private int quantity;
-        private int price;
+        private float price;
 
         // Getters and Setters
         public String getId() {
@@ -283,11 +283,11 @@ public class CreateTaskRequest {
             this.quantity = quantity;
         }
 
-        public int getPrice() {
+        public float getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(float price) {
             this.price = price;
         }
 

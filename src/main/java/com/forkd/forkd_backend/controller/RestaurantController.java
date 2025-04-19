@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.forkd.forkd_backend.pojos.Address;
 import com.forkd.forkd_backend.pojos.Image;
 import com.forkd.forkd_backend.pojos.Restaurant;
 import com.forkd.forkd_backend.service.RestaurantService;
@@ -59,6 +60,17 @@ public class RestaurantController {
 				:ResponseEntity.ok()
 					.body(new ApiResponse<>("Restaurant retrieved", restaurant));
 	}
+	
+	@GetMapping("/{id}/address")
+	public ResponseEntity<ApiResponse<Address>> getRestaurantAddress(@PathVariable int id) {
+		Address address = restaurantService.getRestaurantAddress(id);
+		return address == null?
+				ResponseEntity.status(HttpStatus.NO_CONTENT)
+					.body(new ApiResponse<>("Restaurant not found", null))
+				:ResponseEntity.ok()
+					.body(new ApiResponse<>("Restaurant retrieved", address));
+	}
+	
 	
 
 	@GetMapping("/image/{id}")

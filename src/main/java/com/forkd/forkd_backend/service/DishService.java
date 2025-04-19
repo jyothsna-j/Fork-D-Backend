@@ -26,9 +26,10 @@ public class DishService {
 	public String addDish(Dish dish, MultipartFile file){
 		
 		try {
-			
-			Image image = new Image(file.getContentType(), file.getOriginalFilename(), file.getBytes());
-			dish.setDishImage(image);
+			if(file!=null) {
+				Image image = new Image(file.getContentType(), file.getOriginalFilename(), file.getBytes());
+				dish.setDishImage(image);
+			}
 			return dishRepository.insertDish(dish);
 			
 		} catch (IOException e) {

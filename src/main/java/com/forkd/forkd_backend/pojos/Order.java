@@ -10,36 +10,44 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Order {
+
 	private int orderId;
 	private User user;
 	private Restaurant restaurant;
 	private float amount;
 	private String orderStatus;
+	private String deliveryStatus;
 	private LocalDateTime orderDate;
 	private List<OrderedItems> items;
 	private UUID orderReferenceNumber;
-	
+	private Address pickupAddress;
+	private Address dropAddress;
+
 	@Autowired
 	@JsonCreator
 	public Order(
-			 @JsonProperty("user")User user, 
-			 @JsonProperty("restaurant")Restaurant restaurant, 
-			 @JsonProperty("amount")float amount, 
-			 @JsonProperty("orderStatus")String orderStatus, 
-			 @JsonProperty("orderDate")LocalDateTime orderDate,
-			 @JsonProperty("items")List<OrderedItems> items) {
-		super();
+		@JsonProperty("user") User user,
+		@JsonProperty("restaurant") Restaurant restaurant,
+		@JsonProperty("amount") float amount,
+		@JsonProperty("orderStatus") String orderStatus,
+		@JsonProperty("orderDate") LocalDateTime orderDate,
+		@JsonProperty("items") List<OrderedItems> items,
+		@JsonProperty("pickupAddress") Address pickupAddress,
+		@JsonProperty("dropAddress") Address dropAddress
+	) {
 		this.user = user;
 		this.restaurant = restaurant;
 		this.amount = amount;
 		this.orderStatus = orderStatus;
 		this.orderDate = orderDate;
 		this.items = items;
+		this.pickupAddress = pickupAddress;
+		this.dropAddress = dropAddress;
 	}
 
-	public Order(int orderId, User user, Restaurant restaurant, float amount, String orderStatus, LocalDateTime orderDate,
-			List<OrderedItems> items, UUID orderReferenceNumber) {
-		super();
+	public Order(int orderId, User user, Restaurant restaurant, float amount, String orderStatus,
+	             LocalDateTime orderDate, List<OrderedItems> items, UUID orderReferenceNumber,
+	             Address pickupAddress, Address dropAddress) {
 		this.orderId = orderId;
 		this.user = user;
 		this.restaurant = restaurant;
@@ -48,10 +56,11 @@ public class Order {
 		this.orderDate = orderDate;
 		this.items = items;
 		this.orderReferenceNumber = orderReferenceNumber;
+		this.pickupAddress = pickupAddress;
+		this.dropAddress = dropAddress;
 	}
 
 	public Order() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getOrderId() {
@@ -117,15 +126,38 @@ public class Order {
 	public void setOrderReferenceNumber(UUID orderReferenceNumber) {
 		this.orderReferenceNumber = orderReferenceNumber;
 	}
-	
+
+	public Address getPickupAddress() {
+		return pickupAddress;
+	}
+
+	public void setPickupAddress(Address pickupAddress) {
+		this.pickupAddress = pickupAddress;
+	}
+
+	public Address getDropAddress() {
+		return dropAddress;
+	}
+
+	public void setDropAddress(Address dropAddress) {
+		this.dropAddress = dropAddress;
+	}
+
+	public String getDeliveryStatus() {
+		return deliveryStatus;
+	}
+
+	public void setDeliveryStatus(String deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
 }
 
 enum Status {
-	  PAYMENT_APPROVAL_PENDING,
-	  PAYMENT_APPROVED,
-	  INVALID_PAYMENT,
-	  PREPARING,
-	  PREPARED,
-	  IN_TRANSIT,
-	  DELIVERED
+	PAYMENT_APPROVAL_PENDING,
+	ORDER_APPROVED,
+	INVALID_PAYMENT,
+	PREPARING,
+	PREPARED,
+	IN_TRANSIT,
+	DELIVERED
 }

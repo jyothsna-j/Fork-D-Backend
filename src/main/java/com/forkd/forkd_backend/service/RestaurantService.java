@@ -6,17 +6,21 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.forkd.forkd_backend.pojos.Address;
 import com.forkd.forkd_backend.pojos.Image;
 import com.forkd.forkd_backend.pojos.Restaurant;
 import com.forkd.forkd_backend.repository.RestaurantRepository;
+import com.forkd.forkd_backend.repository.UserRepository;
 
 @Service
 public class RestaurantService {
 
 	private final RestaurantRepository restaurantRepository;
+	private final UserRepository userRepository;
 	
-	public RestaurantService(RestaurantRepository restaurantRepository) {
+	public RestaurantService(RestaurantRepository restaurantRepository, UserRepository userRepository) {
 		this.restaurantRepository = restaurantRepository;
+		this.userRepository = userRepository;
 	}
 	
 	public List<Restaurant> getAllRestaurants(){
@@ -29,6 +33,10 @@ public class RestaurantService {
 	
 	public Restaurant getRestaurantByUserId(int id) {
 		return restaurantRepository.findByUserId(id);
+	}
+	
+	public Address getRestaurantAddress(int id) {
+		return userRepository.getAddressById((long) id);
 	}
 
 	public String updateRestaurantImage(int restaurantId, MultipartFile file) {
