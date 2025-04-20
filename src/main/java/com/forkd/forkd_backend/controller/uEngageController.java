@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,13 +42,30 @@ public class uEngageController {
 	public uEngageController(OrderService orderService) {
 		this.orderService = orderService;
 	}
+	
+	@GetMapping("/test")
+	public ResponseEntity<?> testExternalApi() {
+        String url = "https://jsonplaceholder.typicode.com/posts/1";
+
+        try {
+            String response = restTemplate.getForObject(url, String.class);
+            return ResponseEntity.ok(response);
+
+        }  catch (ResourceAccessException ex) {
+            System.err.println("Timeout or connection error: " + ex.getMessage());
+            return ResponseEntity.status(504).body("External API not responding");
+
+        } catch (Exception ex) {
+            System.err.println("Unknown error: " + ex.getMessage());
+            ex.printStackTrace();
+            return ResponseEntity.status(500).body("Unexpected error occurred");
+        }
+    }
 
 	@PostMapping("/getServiceability")
 	public ResponseEntity<GetServiceabilityResponse> GetServiceability(@RequestBody GetServiceabilityRequest payload) {
 		
 		String URL = externalUrl + "getServiceability";
-		
-		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
