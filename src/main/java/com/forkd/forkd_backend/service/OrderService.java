@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.forkd.forkd_backend.controller.uEngagePojos.TrackTaskCallbackRequest;
 import com.forkd.forkd_backend.pojos.Order;
 import com.forkd.forkd_backend.repository.OrderRepository;
 
@@ -36,6 +37,23 @@ public class OrderService {
 
 	public void updateOrderStatus(int id, String status) {
 		orderRepository.updateStatus(id, status);
+	}
+	
+	public void updateOrderStatus(String id, String status) {
+		orderRepository.updateStatus(id, status);
+	}
+	
+	public void updateDeliveryStatus(String id, String status) {
+		orderRepository.updateDeliveryStatus(id, status);
+	}
+
+	public void updateTaskId(int orderId, String taskId) {
+		orderRepository.updatetaskId(orderId, taskId);
+		
+	}
+
+	public void updateRiderTaskDetails(TrackTaskCallbackRequest request) {
+		orderRepository.updateRiderTaskDetails(request);
 	}
 
 }

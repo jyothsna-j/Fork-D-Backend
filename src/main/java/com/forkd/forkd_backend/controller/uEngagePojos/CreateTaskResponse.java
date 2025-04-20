@@ -1,13 +1,16 @@
 package com.forkd.forkd_backend.controller.uEngagePojos;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CreateTaskResponse {
 
     private boolean status;
     private String vendor_order_id;
     private String taskId;
     private String message;
-    private String Status_code;
+    @JsonProperty("Status_code")
+    private String status_code; 
 
     // Getters and Setters
     public boolean isStatus() {
@@ -43,11 +46,11 @@ public class CreateTaskResponse {
     }
 
     public String getStatus_code() {
-        return Status_code;
+        return status_code;
     }
 
     public void setStatus_code(String status_code) {
-        Status_code = status_code;
+        this.status_code = status_code;
     }
 
     // equals
@@ -60,13 +63,13 @@ public class CreateTaskResponse {
                 Objects.equals(vendor_order_id, that.vendor_order_id) &&
                 Objects.equals(taskId, that.taskId) &&
                 Objects.equals(message, that.message) &&
-                Objects.equals(Status_code, that.Status_code);
+                Objects.equals(status_code, that.status_code);
     }
 
     // hashCode
     @Override
     public int hashCode() {
-        return Objects.hash(status, vendor_order_id, taskId, message, Status_code);
+        return Objects.hash(status, vendor_order_id, taskId, message, status_code);
     }
 
     // toString
@@ -77,7 +80,7 @@ public class CreateTaskResponse {
                 ", vendor_order_id='" + vendor_order_id + '\'' +
                 ", taskId='" + taskId + '\'' +
                 ", message='" + message + '\'' +
-                ", Status_code='" + Status_code + '\'' +
+                ", Status_code='" + status_code + '\'' +
                 '}';
     }
 }

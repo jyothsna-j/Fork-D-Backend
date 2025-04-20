@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Order {
@@ -23,14 +22,13 @@ public class Order {
 	private Address pickupAddress;
 	private Address dropAddress;
 
-	@Autowired
 	@JsonCreator
 	public Order(
 		@JsonProperty("user") User user,
 		@JsonProperty("restaurant") Restaurant restaurant,
 		@JsonProperty("amount") float amount,
 		@JsonProperty("orderStatus") String orderStatus,
-		@JsonProperty("orderDate") LocalDateTime orderDate,
+		@JsonProperty("orderDate")@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime orderDate,
 		@JsonProperty("items") List<OrderedItems> items,
 		@JsonProperty("pickupAddress") Address pickupAddress,
 		@JsonProperty("dropAddress") Address dropAddress
@@ -41,21 +39,6 @@ public class Order {
 		this.orderStatus = orderStatus;
 		this.orderDate = orderDate;
 		this.items = items;
-		this.pickupAddress = pickupAddress;
-		this.dropAddress = dropAddress;
-	}
-
-	public Order(int orderId, User user, Restaurant restaurant, float amount, String orderStatus,
-	             LocalDateTime orderDate, List<OrderedItems> items, UUID orderReferenceNumber,
-	             Address pickupAddress, Address dropAddress) {
-		this.orderId = orderId;
-		this.user = user;
-		this.restaurant = restaurant;
-		this.amount = amount;
-		this.orderStatus = orderStatus;
-		this.orderDate = orderDate;
-		this.items = items;
-		this.orderReferenceNumber = orderReferenceNumber;
 		this.pickupAddress = pickupAddress;
 		this.dropAddress = dropAddress;
 	}
@@ -156,8 +139,9 @@ enum Status {
 	PAYMENT_APPROVAL_PENDING,
 	ORDER_APPROVED,
 	INVALID_PAYMENT,
+	PENDING,
 	PREPARING,
 	PREPARED,
-	IN_TRANSIT,
+	OUT_FOR_DELIVERY,
 	DELIVERED
 }
