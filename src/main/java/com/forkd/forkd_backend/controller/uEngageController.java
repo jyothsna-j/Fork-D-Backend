@@ -3,15 +3,17 @@ package com.forkd.forkd_backend.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.forkd.forkd_backend.controller.uEngagePojos.*;
@@ -27,6 +29,9 @@ import com.forkd.forkd_backend.utils.StoreIdMapping;
 @RestController
 @RequestMapping("/uengage")
 public class uEngageController {
+	
+	@Autowired
+	RestTemplate restTemplate;
 	
 	String externalUrl = "https://riderapi-staging.uengage.in/";
 	String token = "grdgedhs";
@@ -47,11 +52,19 @@ public class uEngageController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("access-token", token);
+		
 
 		HttpEntity<GetServiceabilityRequest> requestEntity = new HttpEntity<GetServiceabilityRequest>(payload, headers);
-		ResponseEntity<GetServiceabilityResponse> response = restTemplate.postForEntity(URL, requestEntity, GetServiceabilityResponse.class);
 		
-		return response;
+		try {
+			ResponseEntity<GetServiceabilityResponse> response = restTemplate.postForEntity(URL, requestEntity, GetServiceabilityResponse.class);
+		    return response;
+		}
+		catch (ResourceAccessException ex) {
+		    // Timeout or connection error
+		    System.err.println("Timeout or connection error: " + ex.getMessage());
+		    return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(null);
+		}
 	}
 	
 	@PostMapping("/createTask")
