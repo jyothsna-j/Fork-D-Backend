@@ -14,12 +14,15 @@ public class Address {
 	}
 
 	public Address(String address, Double latitude, Double longitude, Double contactNumber) {
-		super();
 		this.address = address;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.contactNumber = contactNumber;
 	}
+	
+	public Address() {
+    }
+
 
 	public String getAddress() {
 		return address;
