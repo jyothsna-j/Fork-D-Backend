@@ -7,14 +7,15 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StoreIdMapping {
+public class TokenMapping {
 
 	private static final Map<Integer, String> ID_MAP;
 
     static {
         Map<Integer, String> map = new HashMap<>();
-        map.put(1, "63136");
-        map.put(6, "63192");
+        map.put(1, "89");
+        map.put(2, "89");
+        map.put(3, "89");
         // Add more mappings here
         ID_MAP = Collections.unmodifiableMap(map);
     }

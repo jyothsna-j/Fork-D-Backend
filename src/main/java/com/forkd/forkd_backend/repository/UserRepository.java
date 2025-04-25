@@ -43,8 +43,8 @@ public class UserRepository {
 	}
 	
 	public Address getAddressById(Long id) {
-		final RowMapper<Address> addressMapper = (rs, rowNum) -> new Address(rs.getString("address"), rs.getDouble("lat"), rs.getDouble("long"));
-		return jdbcTemplate.queryForObject("SELECT address, lat, long FROM users JOIN restaurants r ON r.user_id = users.user_id WHERE r.id = ?", addressMapper, id);
+		final RowMapper<Address> addressMapper = (rs, rowNum) -> new Address(rs.getString("address"), rs.getDouble("lat"), rs.getDouble("long"), rs.getDouble("contact_number"));
+		return jdbcTemplate.queryForObject("SELECT address, lat, long, contact_number FROM users JOIN restaurants r ON r.user_id = users.user_id WHERE r.id = ?", addressMapper, id);
 		
 	}
 

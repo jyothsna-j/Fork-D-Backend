@@ -6,11 +6,13 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.forkd.forkd_backend.controller.uEngagePojos.TrackTaskCallbackRequest;
+import com.forkd.forkd_backend.controller.uEngagePojos.TrackTaskCallbackRequest.Data;
 import com.forkd.forkd_backend.pojos.Address;
 import com.forkd.forkd_backend.pojos.Dish;
 import com.forkd.forkd_backend.pojos.Order;
@@ -26,7 +28,7 @@ public class OrderRepository {
     public OrderRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
+    
     public List<Order> getOrdersByUserId(Long userId) {
         String sql = """
             SELECT 
@@ -209,7 +211,7 @@ public class OrderRepository {
 		}, orderRefNo);
 	}
 
-    public int insertOrder(Order order) {
+    public Integer insertOrder(Order order) {
         String sql = """
             INSERT INTO orders 
             (user_id, restaurant_id, amount, order_status, delivery_status, order_date, order_ref_no, 
@@ -219,25 +221,34 @@ public class OrderRepository {
             RETURNING order_id
         """;
 
-        int orderId = jdbcTemplate.queryForObject(sql, Integer.class,
-            order.getUser().getUserId(),
-            order.getRestaurant().getRestaurantId(),
-            order.getAmount(),
-            order.getOrderStatus(),
-            order.getDeliveryStatus(),
-            Timestamp.valueOf(order.getOrderDate()),
-            order.getOrderReferenceNumber(),
-            order.getPickupAddress().getAddress(),
-            order.getPickupAddress().getLatitude(),
-            order.getPickupAddress().getLongitude(),
-            order.getDropAddress().getAddress(),
-            order.getDropAddress().getLatitude(),
-            order.getDropAddress().getLongitude()
-        );
+        try {
+        	Integer orderId = jdbcTemplate.queryForObject(sql, Integer.class,
+        		order.getUser().getUserId(),
+        		order.getRestaurant().getRestaurantId(),
+        		order.getAmount(),
+        		order.getOrderStatus(),
+        		order.getDeliveryStatus(),
+        		Timestamp.valueOf(order.getOrderDate()),
+        		order.getOrderReferenceNumber(),
+        		order.getPickupAddress().getAddress(),
+        		order.getPickupAddress().getLatitude(),
+        		order.getPickupAddress().getLongitude(),
+        		order.getDropAddress().getAddress(),
+	        	order.getDropAddress().getLatitude(),
+	            order.getDropAddress().getLongitude()
+        	);
 
-        insertOrderItems(order.getItems(), order.getOrderReferenceNumber());
-
-        return orderId;
+        	if (orderId != null) {
+                insertOrderItems(order.getItems(), order.getOrderReferenceNumber());
+                return orderId;
+            } else {
+                return -1;
+            }
+        	
+        } catch (Exception e) {
+            System.err.println("Error during insertOrder: " + e.getMessage());
+            return -1;
+        }
     }
 
     private void insertOrderItems(List<OrderedItems> items, UUID orderReferenceNumber) {
@@ -263,14 +274,20 @@ public class OrderRepository {
         });
     }
 
-    public void updateStatus(int orderId, String status) {
+    public boolean updateStatus(int orderId, String status) {
         String sql = """
             UPDATE orders
             SET order_status = ?
             WHERE order_id = ?
         """;
         
-        jdbcTemplate.update(sql, status, orderId);
+        try {
+            int rowsAffected = jdbcTemplate.update(sql, status, orderId);
+            return rowsAffected > 0; // true if the update happened
+        } catch (Exception e) {
+            System.err.println("Failed to update order status for orderId " + orderId + ": " + e.getMessage());
+            return false;
+        }
     }
     
     public void updateStatus(String taskId, String status) {
@@ -330,5 +347,45 @@ public class OrderRepository {
             task.getData().getTracking_url(),
             task.getData().getTaskId()
         );
+    }
+    
+    //TODO: error handling for taskId or data not existing
+    public Data getRiderDetails(int ordId) {
+    	String sql = """
+    	        SELECT rd.*
+    	        FROM rider_details rd
+    	        JOIN orders o ON o.taskId = rd.task_id
+    	        WHERE o.order_id = ?;
+    	    """;
+
+    	    try {
+    	        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+    	            String taskId = rs.getString("task_id");
+    	            String name = rs.getString("rider_name");
+    	            String contact = rs.getString("rider_contact");
+    	            String lat = rs.getString("latitude");
+    	            String lon = rs.getString("longitude");
+    	            String tracking = rs.getString("tracking_url");
+
+    	            // If taskId is null or any essential rider detail is missing, return null
+    	            if (taskId == null || name == null || contact == null || lat == null || lon == null) {
+    	                return null;
+    	            }
+
+    	            Data rd = new Data();
+    	            rd.setTaskId(taskId);
+    	            rd.setRider_name(name);
+    	            rd.setRider_contact(contact);
+    	            rd.setLatitude(lat);
+    	            rd.setLongitude(lon);
+    	            rd.setTracking_url(tracking);
+    	            return rd;
+    	        }, ordId);
+    	    } catch (EmptyResultDataAccessException e) {
+    	        return null;
+    	    } catch (Exception e) {
+    	        System.err.println("Error fetching rider details: " + e.getMessage());
+    	        return null;
+    	    }
     }
 }

@@ -34,10 +34,11 @@ public class uEngageController {
 	@Autowired
 	RestTemplate restTemplate;
 	
-	String externalUrl = "https://riderapi-staging.uengage.in/";
-	String token = "grdgedhs";
+	String externalUrl = "https://riderapi.uengage.in/";
+	String token = "UEN680278d272420";
 	
 	OrderService orderService;
+	StoreIdMapping storeIdMapping = new StoreIdMapping();
 	
 	public uEngageController(OrderService orderService) {
 		this.orderService = orderService;
@@ -64,18 +65,26 @@ public class uEngageController {
 
 	@PostMapping("/getServiceability")
 	public ResponseEntity<GetServiceabilityResponse> GetServiceability(@RequestBody GetServiceabilityRequest payload) {
-		
 		String URL = externalUrl + "getServiceability";
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("access-token", token);
 		
-
+		System.out.println(payload.getStore_id());
+		System.out.println(Integer.valueOf(payload.getStore_id()));
+		System.out.println(storeIdMapping.getTargetId(Integer.valueOf(payload.getStore_id())));
+		
+		String storeId = storeIdMapping.getTargetId(Integer.valueOf(payload.getStore_id()));
+		payload.setStore_id(storeId);
+		
+		System.out.print("Store Id set: " + payload.getStore_id());
+		
 		HttpEntity<GetServiceabilityRequest> requestEntity = new HttpEntity<GetServiceabilityRequest>(payload, headers);
 		
 		try {
 			ResponseEntity<GetServiceabilityResponse> response = restTemplate.postForEntity(URL, requestEntity, GetServiceabilityResponse.class);
+			System.out.println(response);
 		    return response;
 		}
 		catch (ResourceAccessException ex) {
@@ -87,7 +96,6 @@ public class uEngageController {
 	
 	@PostMapping("/createTask")
 	public ResponseEntity<CreateTaskResponse> createTask(@RequestBody Order order) {
-		StoreIdMapping storeIdMapping = new StoreIdMapping();
 		
 		CreateTaskRequest request = new CreateTaskRequest();
 		request.setStoreId(storeIdMapping.getTargetId(order.getRestaurant().getRestaurantId()));
@@ -101,7 +109,7 @@ public class uEngageController {
 
 		PickupDropDetails pickup = new PickupDropDetails();
 		pickup.setName(order.getRestaurant().getRestaurantName());
-		pickup.setContact_number("0123456789");
+		pickup.setContact_number(order.getPickupAddress().getContactNumber().toString());
 		pickup.setLatitude(order.getPickupAddress().getLatitude());
 		pickup.setLongitude(order.getPickupAddress().getLongitude());
 		pickup.setAddress(order.getPickupAddress().getAddress());
@@ -158,6 +166,7 @@ public class uEngageController {
 		if(request.getStatus_code()==EventStatus.DELIVERED) {
 			orderService.updateOrderStatus(request.getData().getTaskId(), "DELIVERED");
 		}
+		orderService.updateDeliveryStatus(request.getData().getTaskId(), request.getStatus_code().toString());
 		TrackTaskCallbackResponse response = new TrackTaskCallbackResponse(true, "Webhook Processed");
 		return ResponseEntity.ok(response);
 	}

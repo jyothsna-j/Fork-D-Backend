@@ -5,11 +5,20 @@ public class Address {
 	private String address;
 	private Double latitude;
 	private Double longitude;
+	private Double contactNumber;
 	
 	public Address(String address, Double latitude, Double longitude) {
 		this.address = address;
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+
+	public Address(String address, Double latitude, Double longitude, Double contactNumber) {
+		super();
+		this.address = address;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.contactNumber = contactNumber;
 	}
 
 	public String getAddress() {
@@ -35,6 +44,12 @@ public class Address {
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
-	
-	
+
+	public Double getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(Double contactNumber) {
+		this.contactNumber = contactNumber;
+	}
 }
