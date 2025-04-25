@@ -13,8 +13,8 @@ public class StoreIdMapping {
 
     static {
         Map<Integer, String> map = new HashMap<>();
-        map.put(1, "63136");
-        map.put(6, "63192");
+        map.put(2, "63136");
+        map.put(3, "63192");
         // Add more mappings here
         ID_MAP = Collections.unmodifiableMap(map);
     }
