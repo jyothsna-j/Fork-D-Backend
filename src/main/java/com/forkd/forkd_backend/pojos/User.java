@@ -1,5 +1,7 @@
 package com.forkd.forkd_backend.pojos;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -96,4 +98,32 @@ public class User {
 	public void setContactNumber(Long contactNumber) {
 		this.contactNumber = contactNumber;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(contactNumber, email, name, password, role, userId, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(contactNumber, other.contactNumber) && Objects.equals(email, other.email)
+				&& Objects.equals(name, other.name) && Objects.equals(password, other.password)
+				&& Objects.equals(role, other.role) && Objects.equals(userId, other.userId)
+				&& Objects.equals(username, other.username);
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", username=" + username + ", email=" + email + ", name=" + name
+				+ ", password=" + password + ", role=" + role + ", contactNumber=" + contactNumber + "]";
+	}
+	
+	
 }

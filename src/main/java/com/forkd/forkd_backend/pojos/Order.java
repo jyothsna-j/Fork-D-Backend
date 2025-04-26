@@ -2,6 +2,7 @@ package com.forkd.forkd_backend.pojos;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -133,6 +134,40 @@ public class Order {
 	public void setDeliveryStatus(String deliveryStatus) {
 		this.deliveryStatus = deliveryStatus;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(amount, deliveryStatus, dropAddress, items, orderDate, orderId, orderReferenceNumber,
+				orderStatus, pickupAddress, restaurant, user);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Order other = (Order) obj;
+		return Float.floatToIntBits(amount) == Float.floatToIntBits(other.amount)
+				&& Objects.equals(deliveryStatus, other.deliveryStatus)
+				&& Objects.equals(dropAddress, other.dropAddress) && Objects.equals(items, other.items)
+				&& Objects.equals(orderDate, other.orderDate) && orderId == other.orderId
+				&& Objects.equals(orderReferenceNumber, other.orderReferenceNumber)
+				&& Objects.equals(orderStatus, other.orderStatus) && Objects.equals(pickupAddress, other.pickupAddress)
+				&& Objects.equals(restaurant, other.restaurant) && Objects.equals(user, other.user);
+	}
+
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", user=" + user + ", restaurant=" + restaurant + ", amount=" + amount
+				+ ", orderStatus=" + orderStatus + ", deliveryStatus=" + deliveryStatus + ", orderDate=" + orderDate
+				+ ", items=" + items + ", orderReferenceNumber=" + orderReferenceNumber + ", pickupAddress="
+				+ pickupAddress + ", dropAddress=" + dropAddress + "]";
+	}
+	
+	
 }
 
 enum Status {
