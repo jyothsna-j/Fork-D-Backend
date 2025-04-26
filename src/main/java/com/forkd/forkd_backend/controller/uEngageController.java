@@ -98,6 +98,8 @@ public class uEngageController {
 	@PostMapping("/createTask")
 	public ResponseEntity<CreateTaskResponse> createTask(@RequestBody Order order) {
 		
+		System.out.println(order);
+		
 		CreateTaskRequest request = new CreateTaskRequest();
 		
 		System.out.println(request);
