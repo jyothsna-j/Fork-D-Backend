@@ -101,8 +101,6 @@ public class uEngageController {
 		System.out.println(order);
 		
 		CreateTaskRequest request = new CreateTaskRequest();
-		
-		System.out.println(request);
 		request.setStoreId(storeIdMapping.getTargetId(order.getRestaurant().getRestaurantId()));
 		
 		OrderDetails ordDets = new OrderDetails();
@@ -154,10 +152,11 @@ public class uEngageController {
 		ResponseEntity<CreateTaskResponse> response = restTemplate.postForEntity(URL, requestEntity, CreateTaskResponse.class);
 		
 		System.out.println(response.getBody());
-		
-		orderService.updateOrderStatus(order.getOrderId(), "ORDER_APPROVED");
-		orderService.updateTaskId(order.getOrderId(), response.getBody().getTaskId());
-		orderService.updateDeliveryStatus(response.getBody().getTaskId(), response.getBody().getStatus_code());
+		if(response.getBody().getStatus_code().equals("ACCEPTED")){
+			orderService.updateOrderStatus(order.getOrderId(), "ORDER_APPROVED");
+			orderService.updateTaskId(order.getOrderId(), response.getBody().getTaskId());
+			orderService.updateDeliveryStatus(response.getBody().getTaskId(), response.getBody().getStatus_code());
+		}
 		
 		return ResponseEntity.ok(response.getBody());
 	}
