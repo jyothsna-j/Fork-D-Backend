@@ -69,7 +69,7 @@ public class OrderRepository {
             user.setUsername(rs.getString("username"));
             user.setEmail(rs.getString("email"));
             user.setName(rs.getString("name"));
-            user.setContactNumber(rs.getLong("contact_number"));
+            user.setContactNumber(rs.getString("contact_number"));
             order.setUser(user);
 
             Restaurant restaurant = new Restaurant();
@@ -122,7 +122,7 @@ public class OrderRepository {
             user.setUsername(rs.getString("username"));
             user.setEmail(rs.getString("email"));
             user.setName(rs.getString("name"));
-            user.setContactNumber(rs.getLong("contact_number"));
+            user.setContactNumber(rs.getString("contact_number"));
             order.setUser(user);
 
             Restaurant restaurant = new Restaurant();
@@ -163,7 +163,7 @@ public class OrderRepository {
                 rs.getString("pickup_address"),
                 rs.getDouble("pickup_latitude"),
                 rs.getDouble("pickup_longitude"),
-                rs.getDouble("res_cn")
+                rs.getString("res_cn")
             ));
 
             order.setDropAddress(new Address(
@@ -177,7 +177,7 @@ public class OrderRepository {
             user.setUsername(rs.getString("username"));
             user.setEmail(rs.getString("email"));
             user.setName(rs.getString("name"));
-            user.setContactNumber(rs.getLong("contact_number"));
+            user.setContactNumber(rs.getString("contact_number"));
             order.setUser(user);
 
             Restaurant restaurant = new Restaurant();

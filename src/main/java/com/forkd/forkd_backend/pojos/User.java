@@ -13,12 +13,12 @@ public class User {
 	private String name;
 	private String password;
 	private String role;
-	private Long contactNumber;
+	private String contactNumber;
 
 	@JsonCreator
 	public User(@JsonProperty("name") String name, @JsonProperty("username") String username,
 			@JsonProperty("email") String email, @JsonProperty("password") String password,
-			@JsonProperty("role") String role, @JsonProperty("contactNumber") Long contactNumber) {
+			@JsonProperty("role") String role, @JsonProperty("contactNumber") String contactNumber) {
 		this.name = name;
 		this.username = username;
 		this.email = email;
@@ -28,7 +28,7 @@ public class User {
 	}
 
 	public User(Long userId, String username, String email, String name, String password, String role,
-			Long contactNumber) {
+			String contactNumber) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -91,11 +91,11 @@ public class User {
 		this.role = role;
 	}
 
-	public Long getContactNumber() {
+	public String getContactNumber() {
 		return contactNumber;
 	}
 
-	public void setContactNumber(Long contactNumber) {
+	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
 

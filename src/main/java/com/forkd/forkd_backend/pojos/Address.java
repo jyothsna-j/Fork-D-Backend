@@ -7,7 +7,7 @@ public class Address {
 	private String address;
 	private Double latitude;
 	private Double longitude;
-	private Double contactNumber;
+	private String contactNumber;
 	
 	public Address(String address, Double latitude, Double longitude) {
 		this.address = address;
@@ -15,7 +15,7 @@ public class Address {
 		this.longitude = longitude;
 	}
 
-	public Address(String address, Double latitude, Double longitude, Double contactNumber) {
+	public Address(String address, Double latitude, Double longitude, String contactNumber) {
 		this.address = address;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -50,11 +50,11 @@ public class Address {
 		this.longitude = longitude;
 	}
 
-	public Double getContactNumber() {
+	public String getContactNumber() {
 		return contactNumber;
 	}
 
-	public void setContactNumber(Double contactNumber) {
+	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
 	}
 
