@@ -28,7 +28,7 @@ public class OrderService {
 	}
 	
 	public List<Order> getOrdersToApprove(){
-		return orderRepository.getPaymentApprovalPendingOrders();
+		return orderRepository.getPaymentApprovalPendingOrders();	
 	}
 	
 	public Integer createOrder(Order order) {
