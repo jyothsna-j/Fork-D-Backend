@@ -35,12 +35,11 @@ public class OrderRepository {
                 o.order_id, o.amount, o.order_status, o.delivery_status, o.order_date, o.order_ref_no, 
                 o.pickup_address, o.pickup_latitude, o.pickup_longitude,
                 o.drop_address, o.drop_latitude, o.drop_longitude,
-                u.user_id, u.username, u.email, u.name, u.contact_number, ur.contact_number,
+                u.user_id, u.username, u.email, u.name, u.contact_number,
                 r.id, r.name as restaurant_name
             FROM orders o
             JOIN users u ON o.user_id = u.user_id
             JOIN restaurants r ON o.restaurant_id = r.id
-            JOIN users ur ON ur.user_id = r.user_id
             WHERE o.user_id = ?
         """;
 
@@ -142,11 +141,12 @@ public class OrderRepository {
                 o.order_id, o.amount, o.order_status, o.delivery_status, o.order_date, o.order_ref_no,
                 o.pickup_address, o.pickup_latitude, o.pickup_longitude,
                 o.drop_address, o.drop_latitude, o.drop_longitude,
-                u.user_id, u.username, u.email, u.name, u.contact_number,
+                u.user_id, u.username, u.email, u.name, u.contact_number, ur.contact_number as res_cn,
                 r.id, r.name as restaurant_name
             FROM orders o
             JOIN users u ON o.user_id = u.user_id
             JOIN restaurants r ON o.restaurant_id = r.id
+            JOIN users ur ON ur.user_id = r.user_id
             WHERE o.order_status = 'PAYMENT_APPROVAL_PENDING'
         """;
 
@@ -162,7 +162,8 @@ public class OrderRepository {
             order.setPickupAddress(new Address(
                 rs.getString("pickup_address"),
                 rs.getDouble("pickup_latitude"),
-                rs.getDouble("pickup_longitude")
+                rs.getDouble("pickup_longitude"),
+                rs.getDouble("res_cn")
             ));
 
             order.setDropAddress(new Address(
