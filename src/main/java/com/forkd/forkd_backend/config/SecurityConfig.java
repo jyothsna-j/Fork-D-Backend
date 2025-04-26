@@ -2,6 +2,8 @@ package com.forkd.forkd_backend.config;
 
 import java.util.List;
 
+import java.io.OutputStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +20,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forkd.forkd_backend.utils.ApiResponse;
 import com.forkd.forkd_backend.utils.JwtUtil;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +50,24 @@ public class SecurityConfig {
 	                .requestMatchers(HttpMethod.GET, "/restaurants/**", "/restaurant/**").permitAll()
 	                .anyRequest().authenticated()
 	        )
+		 	.exceptionHandling(exception -> exception
+		            .authenticationEntryPoint((request, response, authException) -> {
+		                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		                response.setContentType("application/json");
+		                ApiResponse<?> apiResponse = new ApiResponse<>("Login expired, please login agains", null);
+		                OutputStream out = response.getOutputStream();
+		                new ObjectMapper().writeValue(out, apiResponse);
+		                out.flush();
+		            })
+		            .accessDeniedHandler((request, response, accessDeniedException) -> {
+		                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		                response.setContentType("application/json");
+		                ApiResponse<?> apiResponse = new ApiResponse<>("You do not have permission to access this resource.", null);
+		                OutputStream out = response.getOutputStream();
+		                new ObjectMapper().writeValue(out, apiResponse);
+		                out.flush();
+		            })
+		        )
 	        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 	        return http.build();
 	 }

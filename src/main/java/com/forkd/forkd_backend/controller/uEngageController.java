@@ -99,6 +99,8 @@ public class uEngageController {
 	public ResponseEntity<CreateTaskResponse> createTask(@RequestBody Order order) {
 		
 		CreateTaskRequest request = new CreateTaskRequest();
+		
+		System.out.println(request);
 		request.setStoreId(storeIdMapping.getTargetId(order.getRestaurant().getRestaurantId()));
 		
 		OrderDetails ordDets = new OrderDetails();
