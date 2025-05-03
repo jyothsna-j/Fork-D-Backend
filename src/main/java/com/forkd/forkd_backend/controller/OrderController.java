@@ -74,10 +74,10 @@ public class OrderController {
 	public ResponseEntity<ApiResponse<String>> updateOrderStatus(@PathVariable("id") int id, @PathVariable("status") String status) {
 		boolean updated = orderService.updateOrderStatus(id, status);
 		return updated ?
-			ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        		.body(new ApiResponse<>("Failed to update the status", null))
-        	: ResponseEntity.ok()
-        		.body(new ApiResponse<>("Update successful", null));
+			ResponseEntity.ok()
+        		.body(new ApiResponse<>("Update successful", null))
+        	: ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    			.body(new ApiResponse<>("Failed to update the status", null));
 	}
 	
 	@GetMapping("/{id}/rider-details")
