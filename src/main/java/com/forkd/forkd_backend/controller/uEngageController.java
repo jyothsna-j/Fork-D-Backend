@@ -83,6 +83,7 @@ public class uEngageController {
 		HttpEntity<GetServiceabilityRequest> requestEntity = new HttpEntity<GetServiceabilityRequest>(payload, headers);
 		
 		try {
+			System.out.println(payload);
 			ResponseEntity<GetServiceabilityResponse> response = restTemplate.postForEntity(URL, requestEntity, GetServiceabilityResponse.class);
 			System.out.println(response);
 			System.out.println(ResponseEntity.ok(response.getBody()));
