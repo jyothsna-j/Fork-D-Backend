@@ -19,6 +19,10 @@ public class OrderService {
 		this.orderRepository = orderRepository;
 	}
 	
+	public List<Order> getOrders() {
+		return orderRepository.getOrders();
+	}
+	
 	public List<Order> getOrdersByUserId(Long userId) {
 		return orderRepository.getOrdersByUserId(userId);
 	}

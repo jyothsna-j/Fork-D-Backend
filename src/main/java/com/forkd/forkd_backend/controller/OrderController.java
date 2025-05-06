@@ -27,6 +27,17 @@ public class OrderController {
 		this.orderService = orderService;
 	}
 	
+	@GetMapping()
+	public ResponseEntity<ApiResponse<List<Order>>> fetchOrders(){
+		List<Order> orders = orderService.getOrders();
+		
+		return orders.isEmpty()?
+				ResponseEntity.status(HttpStatus.NO_CONTENT)
+					.body(new ApiResponse<>("Orders not found", List.of()))
+				:ResponseEntity.ok()
+					.body(new ApiResponse<>("Orders retrieved", orders));
+	}
+	
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<ApiResponse<List<Order>>> fetchOrdersByUserId(@PathVariable Long userId){
 		List<Order> orders = orderService.getOrdersByUserId(userId);

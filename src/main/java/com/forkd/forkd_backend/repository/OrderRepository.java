@@ -29,6 +29,58 @@ public class OrderRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
     
+    public List<Order> getOrders() {
+        String sql = """
+            SELECT 
+                o.order_id, o.amount, o.order_status, o.delivery_status, o.order_date, o.order_ref_no, 
+                o.pickup_address, o.pickup_latitude, o.pickup_longitude,
+                o.drop_address, o.drop_latitude, o.drop_longitude,
+                u.user_id, u.username, u.email, u.name, u.contact_number,
+                r.id, r.name as restaurant_name
+            FROM orders o
+            JOIN users u ON o.user_id = u.user_id
+            JOIN restaurants r ON o.restaurant_id = r.id
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Order order = new Order();
+            order.setOrderId(rs.getInt("order_id"));
+            order.setAmount(rs.getFloat("amount"));
+            order.setOrderStatus(rs.getString("order_status"));
+            order.setDeliveryStatus(rs.getString("delivery_status"));
+            order.setOrderDate(rs.getTimestamp("order_date").toLocalDateTime());
+            order.setOrderReferenceNumber(UUID.fromString(rs.getString("order_ref_no")));
+
+            order.setPickupAddress(new Address(
+                rs.getString("pickup_address"),
+                rs.getDouble("pickup_latitude"),
+                rs.getDouble("pickup_longitude")
+            ));
+
+            order.setDropAddress(new Address(
+                rs.getString("drop_address"),
+                rs.getDouble("drop_latitude"),
+                rs.getDouble("drop_longitude")
+            ));
+
+            User user = new User();
+            user.setUserId(rs.getLong("user_id"));
+            user.setUsername(rs.getString("username"));
+            user.setEmail(rs.getString("email"));
+            user.setName(rs.getString("name"));
+            user.setContactNumber(rs.getString("contact_number"));
+            order.setUser(user);
+
+            Restaurant restaurant = new Restaurant();
+            restaurant.setRestaurantId(rs.getInt("id"));
+            restaurant.setRestaurantName(rs.getString("restaurant_name"));
+            order.setRestaurant(restaurant);
+
+            order.setItems(getOrderedItemsByOrderRefNo(order.getOrderReferenceNumber()));
+            return order;
+        });
+    }
+    
     public List<Order> getOrdersByUserId(Long userId) {
         String sql = """
             SELECT 
