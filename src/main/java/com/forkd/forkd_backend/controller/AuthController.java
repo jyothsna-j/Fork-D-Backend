@@ -2,6 +2,7 @@ package com.forkd.forkd_backend.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.forkd.forkd_backend.pojos.User;
 import com.forkd.forkd_backend.service.AuthService;
+import com.forkd.forkd_backend.service.MasterService;
 import com.forkd.forkd_backend.utils.ApiResponse;
 
 @RestController
@@ -16,9 +18,11 @@ import com.forkd.forkd_backend.utils.ApiResponse;
 public class AuthController {
 
 	private final AuthService authService;
+	 private final MasterService masterService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, MasterService masterService) {
         this.authService = authService;
+        this.masterService = masterService;
     }
     
     @PostMapping("/login")
@@ -33,6 +37,19 @@ public class AuthController {
     	ApiResponse<String> token = authService.signup(request);
     	return token.getData() == null
     			? ResponseEntity.status(HttpStatus.BAD_REQUEST).body(token) : ResponseEntity.ok(token);
+    }
+    
+    @GetMapping("/status")
+    public ApiResponse<Boolean> getStatus() {
+        boolean status = masterService.getCurrentState();
+        return new ApiResponse<>("Fetched status", status);
+    }
+
+    // POST new value (true/false)
+    @PostMapping("/status")
+    public ApiResponse<Boolean> updateStatus(@RequestBody Boolean newValue) {
+        masterService.setState(newValue);
+        return new ApiResponse<>("Status updated", newValue);
     }
 }
 

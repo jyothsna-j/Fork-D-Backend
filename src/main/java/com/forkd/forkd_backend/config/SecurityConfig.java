@@ -1,8 +1,7 @@
 package com.forkd.forkd_backend.config;
 
-import java.util.List;
-
 import java.io.OutputStream;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -54,7 +53,7 @@ public class SecurityConfig {
 		            .authenticationEntryPoint((request, response, authException) -> {
 		                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		                response.setContentType("application/json");
-		                ApiResponse<?> apiResponse = new ApiResponse<>("Login expired, please login agains", null);
+		                ApiResponse<?> apiResponse = new ApiResponse<>("Login expired, please login again", null);
 		                OutputStream out = response.getOutputStream();
 		                new ObjectMapper().writeValue(out, apiResponse);
 		                out.flush();
