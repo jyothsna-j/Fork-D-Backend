@@ -1,5 +1,7 @@
 package com.forkd.forkd_backend.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,17 @@ public class AuthController {
     	return token.getData() == null
     			? ResponseEntity.status(HttpStatus.BAD_REQUEST).body(token) : ResponseEntity.ok(token);
     }
+    
+    @GetMapping("/users")
+	public ResponseEntity<ApiResponse<List<User>>> getAllUsers(){
+		List<User> users = this.authService.getAllUsers();
+		
+		return users.isEmpty()?
+				ResponseEntity.status(HttpStatus.NO_CONTENT)
+					.body(new ApiResponse<>("Restaurants not found", List.of()))
+				:ResponseEntity.ok()
+					.body(new ApiResponse<>("Restaurants retrieved", users));
+	}
     
     @GetMapping("/status")
     public ApiResponse<Boolean> getStatus() {

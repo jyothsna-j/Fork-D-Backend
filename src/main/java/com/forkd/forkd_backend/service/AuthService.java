@@ -1,6 +1,7 @@
 package com.forkd.forkd_backend.service;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -60,5 +61,9 @@ public class AuthService implements UserDetailsService {
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), Collections.emptyList());
         }
         throw new UsernameNotFoundException("User not found");
+    }
+    
+    public List<User> getAllUsers(){
+    	return userRepository.getAllUsers();
     }
 }
